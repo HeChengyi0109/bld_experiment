@@ -1,0 +1,111 @@
+[debug main] bld_solver path = D:\研一上\研究课题\bld\bld_new\scip\bld_solver.py
+正在读取数据(Excel).
+
+========== Params 读取回显（input.xlsx -> Params） ==========
+  B1 | num_of_SKUs     = 300
+  B2 | num_of_Vehicles = 10
+  B3 | num_of_Batches  = 40
+  B4 | B_LB            = 3
+  B5 | B_UB            = 10
+  B6 | b_v             = 5
+  B7 | M_vk            = 10
+  B8 | W_v_min         = 28.5
+  B9 | W_v_max         = 32.5
+ B10 | run_epagap      = 0.005
+ B11 | run_epgap       = 0.005
+ B12 | run_tilim       = 300.0
+===========================================================
+
+数据读取成功!
+Prices 原始批次数: 40；启用批次数(进入模型): 20；Active=0 已被过滤: 20
+=== 数据验证 ===
+beta_min 样本: [0.35, 0.35, 0.35, 0.35, 0.35]
+beta_max 样本: [0.4, 0.4, 0.4, 0.4, 0.4]
+alpha_min 样本: [0.0, 0.005, 0.01, 0.015, 0.025]
+alpha_max 样本: [0.005, 0.01, 0.015, 0.025, 0.07]
+SKU beta 样本: [0.5247999999999999, 0.42469999999999997, 0.30635, 0.29864999999999997, 0.29864999999999997]
+SKU alpha 样本: [0.013295, 0.068285, 0.1168, 0.1219, 0.1219]
+[success]订单参数预检查通过。
+进入优化模型求解.
+[debug] loaded solver file: D:\研一上\研究课题\bld\bld_new\scip\bld_solver.py
+构建单体 MIP 模型（不使用 Benders）...
+配置 SCIP 求解参数 ...
+[debug] run_epgap = 0.005
+[debug] run_epagap = 0.005
+[debug] run_tilim = 300.0
+[debug] FORCE_SCIP_TIME_LIMIT_SEC = 300.0
+[progress]当前 SCIP 时间限制：300.0 秒（5.00 分钟）
+[progress]项目目录包含非 ASCII 路径，SCIP 原生日志改为写入：D:\bld_scip_progress_logs\i300v10t300_scip_raw.log
+[progress]后续解析结果（CSV/图片）仍输出到：D:\研一上\研究课题\bld\bld_new\scip\parallel_runs\outputs\i300v10t300_scip_progress
+开始求解 MIP ...
+presolving:
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (1.0s) symmetry computation finished: 12 generators found (max: 1063, log10 of symmetry group size: 7.46) (symcode time: 1.00)
+dynamic symmetry handling statistics:
+   orbitopal reduction:       no components
+   orbital reduction:          1 components of sizes 12
+   lexicographic reduction:   12 permutations with support sizes 400, 400, 400, 12040, 12040, 12040, 12040, 12040, 12040, 12040, 12040, 12040
+handled 1 out of 1 symmetry components
+presolving (0 rounds: 0 fast, 0 medium, 0 exhaustive):
+ 0 deleted vars, 0 deleted constraints, 0 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 60200 variables (60200 bin, 0 int, 0 impl, 0 cont) and 1331 constraints
+   1331 constraints of type <linear>
+Presolving Time: 1.00
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 16.0s|     1 |     0 | 18609 |     - |   692M |   0 |  60k|1245 |1241 |   0 |  0 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 19.0s|     1 |     0 | 20112 |     - |   724M |   0 |  60k|1245 |1282 |  41 |  1 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 21.0s|     1 |     0 | 20742 |     - |   733M |   0 |  60k|1245 |1320 |  79 |  2 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 22.0s|     1 |     0 | 21632 |     - |   739M |   0 |  60k|1245 |1361 | 120 |  3 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 25.0s|     1 |     0 | 23060 |     - |   748M |   0 |  60k|1245 |1400 | 159 |  4 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 27.0s|     1 |     0 | 24423 |     - |   752M |   0 |  60k|1245 |1433 | 192 |  5 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 30.0s|     1 |     0 | 25627 |     - |   757M |   0 |  60k|1245 |1468 | 227 |  6 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 33.0s|     1 |     0 | 27044 |     - |   761M |   0 |  60k|1245 |1499 | 258 |  7 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 36.0s|     1 |     0 | 28393 |     - |   766M |   0 |  60k|1245 |1530 | 289 |  8 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 39.0s|     1 |     0 | 30591 |     - |   768M |   0 |  60k|1245 |1560 | 319 |  9 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 42.0s|     1 |     0 | 32124 |     - |   769M |   0 |  60k|1245 |1590 | 349 | 10 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+ 45.0s|     1 |     0 | 33235 |     - |   773M |   0 |  60k|1245 |1606 | 379 | 11 |   4 |   0 | 6.157745e+05 |      --      |    Inf | unknown
+  109s|     1 |     0 | 72660 |     - |   783M |   0 |  60k|1341 |1606 | 379 | 11 | 101 |  20 | 6.157745e+05 |      --      |    Inf | unknown
+  112s|     1 |     0 | 74265 |     - |   787M |   0 |  60k|1341 |1637 | 410 | 12 | 101 |  20 | 6.157745e+05 |      --      |    Inf | unknown
+  113s|     1 |     0 | 74610 |     - |   787M |   0 |  60k|1340 |1667 | 440 | 13 | 101 |  20 | 6.157745e+05 |      --      |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  127s|     1 |     2 | 74610 |     - |   787M |   0 |  60k|1339 |1667 | 440 | 13 | 101 |  39 | 6.157745e+05 |      --      |    Inf | unknown
+WARNING: Orbital fixing symmetry for 000001D0732F6708 broken before symmetry. Requires fixing 10/60200 affected variables.
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 300.00
+Solving Nodes      : 17
+Primal Bound       : -1.00000000000000e+20 (0 solutions)
+Dual Bound         : +6.15774541149590e+05
+Gap                : infinite
+
+=== SCIP过程指标时间序列 ===
+[progress] t=16.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=19.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=21.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=22.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=25.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=27.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=30.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=33.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=36.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=39.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=42.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=45.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=109.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=112.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=113.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=127.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress]已按配置关闭绘图，仅输出 CSV。
+[progress]过程数据与图片输出目录：D:\研一上\研究课题\bld\bld_new\scip\parallel_runs\outputs\i300v10t300_scip_progress
+[progress]过程数据 CSV：D:\研一上\研究课题\bld\bld_new\scip\parallel_runs\outputs\i300v10t300_scip_progress\i300v10t300.csv
+[SCIP] Solver status: timelimit
+[debug] n_sols = 0
+[debug] best_sol_is_none = False
+[debug] best_sol_type = <class 'pyscipopt.scip.Solution'>
+[debug] entering no-solution branch
+[error]在时间限制内未找到任何可行解。不生成输出文件。
+[debug main] returned saved_file = None
+[debug main] returned has_solution = False
+[error]求解在时限/Gap限制内结束，但没有找到任何可行解，状态: timelimit

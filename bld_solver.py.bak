@@ -1,0 +1,347 @@
+"""
+bld_benders_solver.py
+Benders 求解模块：单阶段求解 + 结果写回 Excel
+"""
+from pyscipopt import SCIP_PARAMSETTING
+import pandas as pd
+
+from bld_data import ModelData, Solution
+from bld_model import build_mip_model
+# from bld_utils import write_results_to_excel
+from bld_utils import write_df_to_sheet
+from config import OUTPUT_FILE
+import os
+import shutil
+import time
+
+def extract_solution(model, x, data: ModelData, best_sol) -> Solution:
+    """
+    从 best_sol 提取最终解（适用于 optimal / timelimit / gaplimit 等情况）
+    """
+    status = str(model.getStatus())
+
+    V_IDs = [0] * data.num_of_SKUs
+    B_IDs = [0] * data.num_of_SKUs
+
+    for i in range(data.num_of_SKUs):
+        assigned = False
+        for v in range(data.num_of_Vehicles):
+            for k in range(data.num_of_Batches):
+                # 注意：用 best_sol 取值，而不是 model.getVal()
+                if model.getSolVal(best_sol, x[i, v, k]) > 0.5:
+                    V_IDs[i] = v + 1
+                    B_IDs[i] = k + 1
+                    assigned = True
+                    break
+            if assigned:
+                break
+
+    # 目标值也用 best_sol 更稳妥
+    try:
+        objective_value = float(model.getSolObjVal(best_sol))
+    except Exception:
+        objective_value = float(model.getObjVal())
+
+    gap = float(model.getGap()) if hasattr(model, "getGap") else 0.0
+
+    return Solution(
+        status=status,
+        objective_value=objective_value,
+        V_IDs=V_IDs,
+        B_IDs=B_IDs,
+        gap=gap,
+    )
+
+
+
+def save_solution(solution: Solution, data: ModelData, input_file: str, output_file: str) -> str:
+    """
+    保存求解结果到固定 output.xlsx（output2.0 格式）
+    - 若 output.xlsx 不存在：用 output2.0.xlsx 初始化一次
+    - 每次运行覆盖写 SKUs 与 VBResult
+    """
+
+    # output_file = OUTPUT_FILE
+
+    # -----------------
+    # 1) SKUs sheet
+    # -----------------
+    df = data.SKUs_Data.reset_index(drop=True)
+    out_skus = pd.DataFrame({
+        "No": df["SKU_ID"],
+        "V_ID": solution.V_IDs,
+        "B_ID": solution.B_IDs,
+        "Weight": df["weight"],
+        "销售量": df.get("sale_weight", 0),
+        "Cu": df["Cu_grade"],
+        "Mo": df["Mo_grade"],
+        "Water": df["water_percentage"],
+    })
+    write_df_to_sheet(output_file, "SKUs", out_skus, start_row=1, start_col=1, clear_sheet=True)
+
+    # -----------------
+    # 2) VBResult sheet
+    # -----------------
+    rows = []
+    V = data.num_of_Vehicles
+    K = data.num_of_Batches
+
+    for v in range(1, V + 1):      # 1-based
+        for k in range(1, K + 1):  # 1-based
+            idx = [i for i in range(data.num_of_SKUs) if solution.V_IDs[i] == v and solution.B_IDs[i] == k]
+
+            W = sum(data.w[i] for i in idx) if idx else 0.0
+            Wdry = sum(data._w[i] for i in idx) if idx else 0.0
+
+            mo_metal = 100*sum(data.beta[i] * data._w[i] for i in idx) if idx else 0.0
+            cu_metal = 100*sum(data.alpha[i] * data._w[i] for i in idx) if idx else 0.0
+
+            mo_grade = (mo_metal / Wdry) if Wdry > 0 else 0.0
+            cu_grade = (cu_metal / Wdry) if Wdry > 0 else 0.0
+            moisture = ((W - Wdry) / W) if W > 0 else 0.0
+
+            unit_price = float(data.a[k - 1])  # 0-based list
+            total_price = unit_price * mo_metal
+
+            if W <= 0:
+                continue
+
+            rows.append({
+                "V_ID": v,
+                "B_ID": k,
+                "W": W,
+                "Wdry": Wdry,
+                "Mo grade": mo_grade,
+                "Cu grade": cu_grade,
+                "moisture": moisture,
+                "unit_price": unit_price,
+                "Mo metal": mo_metal,
+                "total_price": total_price,
+            })
+
+    vb_df = pd.DataFrame(rows, columns=[
+        "V_ID", "B_ID", "W", "Wdry", "Mo grade", "Cu grade", "moisture",
+        "unit_price", "Mo metal", "total_price"
+    ])
+    write_df_to_sheet(output_file, "VBResult", vb_df, start_row=1, start_col=1, clear_sheet=True)
+
+    return output_file
+'''
+def print_solution_summary(solution: Solution, data: ModelData):
+    """
+    打印求解摘要（使用解中的 V/B 计算批次数）
+    """
+    print("\n=== 求解结果摘要 ===")
+    print(f"求解状态: {solution.status}")
+
+    if solution.status == "optimal":
+        print(f"找到最优解，目标值: {solution.objective_value:.2f}")
+    elif solution.status == "timelimit":
+        print(f"达到时间限制，目标值: {solution.objective_value:.2f}")
+        print(f"当前间隙: {solution.gap}")
+    elif solution.status == "gaplimit":
+        print(f"达到间隙限制，目标值: {solution.objective_value:.2f}")
+        print(f"当前间隙: {solution.gap}")
+
+    vk_pairs = set()
+    for i in range(data.num_of_SKUs):
+        v = solution.V_IDs[i]
+        b = solution.B_IDs[i]
+        if v > 0 and b > 0:
+            vk_pairs.add((v, b))
+
+    print(f"使用的批次数量: {len(vk_pairs)}")
+    print(f"使用的车辆数量: {len({v for v in solution.V_IDs if v > 0})}")
+    print(f"分配的 SKU 数量: {sum(1 for v in solution.V_IDs if v > 0)}")
+'''
+def print_solution_summary(
+    solution: Solution,
+    data: ModelData,
+    runtime_sec: float | None = None,
+    saved_file: str | None = None,
+):
+    """
+    打印求解摘要（按用户指定顺序，每项一行；不显示原批次编号）
+    """
+
+    def _fmt(x: float) -> str:
+        # 兼顾 0.5 / 0.005 这类数值的可读性：6 位有效数字
+        try:
+            return f"{float(x):.6g}"
+        except Exception:
+            return str(x)
+
+    print("\n=== 求解结果摘要 ===")
+    # 1) 运行时间
+    if runtime_sec is None:
+        runtime_str = "N/A"
+    else:
+        runtime_str = f"{runtime_sec:.3f} s"
+    print(f"[result]运行时间：{runtime_str}")
+
+    # 2) 求解状态
+    print(f"[result]求解状态：{solution.status}")
+
+    # 3) 目标值
+    obj = solution.objective_value
+    obj_str = "N/A" if obj is None else f"{obj:.6f}"
+    print(f"[result]目标值：{obj_str}")
+
+    # 基于解提取使用情况
+    used_vehicles = {v for v in solution.V_IDs if v and v > 0}
+    assigned_skus = sum(1 for v in solution.V_IDs if v and v > 0)
+    used_batches = {b for b in solution.B_IDs if b and b > 0}  # B_ID 为 1-based
+
+    # 4) 使用批次数量（按“批次ID去重”）
+    print(f"[result]使用批次数量：{len(used_batches)}")
+
+    # 5/6) 使用批次钼/铜品位区间（去重后展示）
+    mo_intervals = set()
+    cu_intervals = set()
+    for b in sorted(used_batches):
+        idx = b - 1  # 1-based -> 0-based
+        if 0 <= idx < data.num_of_Batches:
+            mo_intervals.add((data.beta_min[idx], data.beta_max[idx]))
+            cu_intervals.add((data.alpha_min[idx], data.alpha_max[idx]))
+
+    if mo_intervals:
+        mo_str = "; ".join(f"{_fmt(lo)}–{_fmt(hi)}" for lo, hi in sorted(mo_intervals))
+    else:
+        mo_str = "N/A"
+    print(f"[result]使用批次钼品位区间：{mo_str}")
+
+    if cu_intervals:
+        cu_str = "; ".join(f"{_fmt(lo)}–{_fmt(hi)}" for lo, hi in sorted(cu_intervals))
+    else:
+        cu_str = "N/A"
+    print(f"[result]使用批次铜品位区间：{cu_str}")
+
+    # 7) 使用车次数量
+    print(f"[result]使用车次数量：{len(used_vehicles)}")
+
+    # 8) 使用SKU数量
+    print(f"[result]使用SKU数量：{assigned_skus}")
+
+    '''
+    # 9) success 行
+    if saved_file:
+        print(f"[success]求解完成！结果已保存到：{saved_file}")
+    else:
+        print("[success]求解完成！结果已保存到：N/A")
+    '''
+
+# ==========================
+def solve_benders_model(data: ModelData, input_file: str, output_file: str):
+    """
+    兼容原 main.py 的调用名：仍叫 solve_benders_model，
+    但内部改为“直接用 SCIP 求解单体 MIP”。
+    达到 data.run_tilim 时自动停止，并输出当前最好解（bestSol）。
+    """
+
+    print("[debug] loaded solver file:", __file__)
+    print("构建单体 MIP 模型（不使用 Benders）...")
+    model = build_mip_model(data)
+    x = model.data["x"]
+    delta = model.data["delta"]
+
+    print("配置 SCIP 求解参数 ...")
+
+    try:
+        model.setPresolve(SCIP_PARAMSETTING.OFF)
+        model.setPropagating(SCIP_PARAMSETTING.DEFAULT)
+        model.setHeuristics(SCIP_PARAMSETTING.DEFAULT)
+    except Exception:
+        pass
+
+    if getattr(data, "run_epgap", 0) and float(data.run_epgap) > 0:
+        model.setParam("limits/gap", float(data.run_epgap))
+    if getattr(data, "run_epagap", 0) and float(data.run_epagap) > 0:
+        model.setParam("limits/absgap", float(data.run_epagap))
+    if getattr(data, "run_tilim", 0) and float(data.run_tilim) > 0:
+        model.setParam("limits/time", float(data.run_tilim))
+
+    model.setParam("display/verblevel", 4)
+
+    print("开始求解 MIP ...")
+
+    t0 = time.time()
+    model.optimize()
+    runtime_sec = time.time() - t0
+
+    status = str(model.getStatus())
+    best_sol = model.getBestSol()
+
+    try:
+        n_sols = int(model.getNSols())
+    except Exception:
+        try:
+            n_sols = len(model.getSols())
+        except Exception:
+            n_sols = 0
+
+    print(f"[SCIP] Solver status: {status}")
+    print(f"[debug] n_sols = {n_sols}")
+    print(f"[debug] best_sol_is_none = {best_sol is None}")
+    print(f"[debug] best_sol_type = {type(best_sol)}")
+
+    if n_sols == 0 or best_sol is None:
+        print("[debug] entering no-solution branch")
+        solution = Solution(
+            status=status,
+            objective_value=None,
+            V_IDs=[0] * data.num_of_SKUs,
+            B_IDs=[0] * data.num_of_SKUs,
+            gap=None,
+        )
+        solution.has_solution = False
+        print("[error]在时间限制内未找到任何可行解。不生成输出文件。")
+        return solution, None, model, None
+
+    print("[debug] entering save branch")
+    # 调试用，不能加，加了会强制报错
+    # raise RuntimeError("SAVE_BRANCH_REACHED")
+
+    # 有可行解
+    try:
+        best_obj = float(model.getSolObjVal(best_sol))
+    except Exception:
+        best_obj = float(model.getObjVal())
+
+    try:
+        gap = float(model.getGap())
+    except Exception:
+        gap = None
+
+    print(f"[SCIP] Best objective (bestSol): {best_obj}")
+    if gap is not None:
+        print(f"[SCIP] Final relative gap: {gap}")
+
+    V_IDs = [0] * data.num_of_SKUs
+    B_IDs = [0] * data.num_of_SKUs
+
+    for i in range(data.num_of_SKUs):
+        assigned = False
+        for v in range(data.num_of_Vehicles):
+            for k in range(data.num_of_Batches):
+                if model.getSolVal(best_sol, x[i, v, k]) > 0.5:
+                    V_IDs[i] = v + 1
+                    B_IDs[i] = k + 1
+                    assigned = True
+                    break
+            if assigned:
+                break
+
+    solution = Solution(
+        status=status,
+        objective_value=best_obj,
+        V_IDs=V_IDs,
+        B_IDs=B_IDs,
+        gap=gap,
+    )
+    solution.has_solution = True
+
+    saved_file = save_solution(solution, data, input_file, output_file)
+    print_solution_summary(solution, data, runtime_sec=runtime_sec, saved_file=saved_file)
+
+    return solution, saved_file, model, None
+

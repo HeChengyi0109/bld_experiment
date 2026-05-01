@@ -1,0 +1,120 @@
+[debug main] bld_solver path = D:\研一上\研究课题\bld\bld_new\scip\bld_solver.py
+正在读取数据(Excel).
+
+========== Params 读取回显（input.xlsx -> Params） ==========
+  B1 | num_of_SKUs     = 200
+  B2 | num_of_Vehicles = 5
+  B3 | num_of_Batches  = 40
+  B4 | B_LB            = 3
+  B5 | B_UB            = 10
+  B6 | b_v             = 5
+  B7 | M_vk            = 10
+  B8 | W_v_min         = 28.5
+  B9 | W_v_max         = 32.5
+ B10 | run_epagap      = 0.005
+ B11 | run_epgap       = 0.005
+ B12 | run_tilim       = 300.0
+===========================================================
+
+数据读取成功!
+Prices 原始批次数: 40；启用批次数(进入模型): 20；Active=0 已被过滤: 20
+=== 数据验证 ===
+beta_min 样本: [0.35, 0.35, 0.35, 0.35, 0.35]
+beta_max 样本: [0.4, 0.4, 0.4, 0.4, 0.4]
+alpha_min 样本: [0.0, 0.005, 0.01, 0.015, 0.025]
+alpha_max 样本: [0.005, 0.01, 0.015, 0.025, 0.07]
+SKU beta 样本: [0.5247999999999999, 0.42469999999999997, 0.30635, 0.29864999999999997, 0.29864999999999997]
+SKU alpha 样本: [0.013295, 0.068285, 0.1168, 0.1219, 0.1219]
+[success]订单参数预检查通过。
+进入优化模型求解.
+[debug] loaded solver file: D:\研一上\研究课题\bld\bld_new\scip\bld_solver.py
+构建单体 MIP 模型（不使用 Benders）...
+配置 SCIP 求解参数 ...
+[debug] run_epgap = 0.005
+[debug] run_epagap = 0.005
+[debug] run_tilim = 300.0
+[debug] FORCE_SCIP_TIME_LIMIT_SEC = 300.0
+[progress]当前 SCIP 时间限制：300.0 秒（5.00 分钟）
+[progress]项目目录包含非 ASCII 路径，SCIP 原生日志改为写入：D:\bld_scip_progress_logs\i200v5t300_scip_raw.log
+[progress]后续解析结果（CSV/图片）仍输出到：D:\研一上\研究课题\bld\bld_new\scip\parallel_runs\outputs\i200v5t300_scip_progress
+开始求解 MIP ...
+presolving:
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) symmetry computation finished: 5 generators found (max: 1500, log10 of symmetry group size: 2.38) (symcode time: 0.00)
+dynamic symmetry handling statistics:
+   orbitopal reduction:       no components
+   orbital reduction:          1 components of sizes 5
+   lexicographic reduction:    5 permutations with support sizes 200, 8040, 8040, 8040, 8040
+handled 1 out of 1 symmetry components
+presolving (0 rounds: 0 fast, 0 medium, 0 exhaustive):
+ 0 deleted vars, 0 deleted constraints, 0 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 20100 variables (20100 bin, 0 int, 0 impl, 0 cont) and 716 constraints
+    716 constraints of type <linear>
+Presolving Time: 0.00
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  1.0s|     1 |     0 |  3278 |     - |   272M |   0 |  20k| 678 | 671 |   0 |  0 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3611 |     - |   286M |   0 |  20k| 678 | 689 |  18 |  1 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3701 |     - |   287M |   0 |  20k| 678 | 707 |  36 |  2 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3797 |     - |   290M |   0 |  20k| 678 | 726 |  55 |  3 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  3.0s|     1 |     0 |  3961 |     - |   297M |   0 |  20k| 678 | 745 |  74 |  4 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  3.0s|     1 |     0 |  4232 |     - |   298M |   0 |  20k| 678 | 764 |  93 |  5 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  3.0s|     1 |     0 |  4624 |     - |   302M |   0 |  20k| 678 | 782 | 111 |  6 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  3.0s|     1 |     0 |  4832 |     - |   304M |   0 |  20k| 678 | 798 | 127 |  7 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  4.0s|     1 |     0 |  5051 |     - |   308M |   0 |  20k| 678 | 818 | 147 |  8 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  4.0s|     1 |     0 |  5285 |     - |   310M |   0 |  20k| 678 | 835 | 164 |  9 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  4.0s|     1 |     0 |  5695 |     - |   312M |   0 |  20k| 678 | 852 | 181 | 10 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+  5.0s|     1 |     0 |  5988 |     - |   314M |   0 |  20k| 678 | 867 | 196 | 11 |   7 |   0 | 3.246034e+05 |      --      |    Inf | unknown
+ 12.0s|     1 |     2 | 17463 |     - |   317M |   0 |  20k| 737 | 867 | 196 | 11 |  66 |  23 | 3.246034e+05 |      --      |    Inf | unknown
+ 74.0s|   100 |    97 | 99858 | 948.2 |   376M |  17 |  20k| 749 | 734 | 542 |  1 |  94 | 555 | 3.246016e+05 |      --      |    Inf | unknown
+  106s|   200 |   195 |155750 | 752.6 |   400M |  21 |  20k| 763 | 756 | 790 |  1 | 113 | 670 | 3.246016e+05 |      --      |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  143s|   300 |   291 |242135 | 789.8 |   405M |  27 |  20k| 809 | 764 | 974 |  1 | 167 | 840 | 3.246016e+05 |      --      |    Inf | unknown
+  183s|   400 |   391 |320384 | 788.0 |   416M |  27 |  20k| 818 | 749 |1212 |  1 | 181 |1076 | 3.245969e+05 |      --      |    Inf | unknown
+  224s|   500 |   491 |403852 | 797.3 |   411M |  27 |  20k| 837 | 751 |1344 |  2 | 207 |1288 | 3.245968e+05 |      --      |    Inf | unknown
+  253s|   600 |   589 |465807 | 767.6 |   411M |  27 |  20k| 859 | 746 |1501 |  1 | 237 |1446 | 3.245968e+05 |      --      |    Inf | unknown
+  276s|   700 |   689 |521767 | 737.9 |   412M |  31 |  20k| 873 | 759 |1686 |  1 | 258 |1543 | 3.245968e+05 |      --      |    Inf | unknown
+  291s|   800 |   789 |549471 | 680.2 |   414M |  31 |  20k| 912 | 759 |1790 |  1 | 297 |1634 | 3.245968e+05 |      --      |    Inf | unknown
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 300.00
+Solving Nodes      : 852
+Primal Bound       : -1.00000000000000e+20 (0 solutions)
+Dual Bound         : +3.24596771942034e+05
+Gap                : infinite
+
+=== SCIP过程指标时间序列 ===
+[progress] t=1.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=2.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=2.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=2.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=3.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=3.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=3.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=3.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=4.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=4.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=4.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=5.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=12.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=74.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=106.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=143.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=183.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=224.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=253.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=276.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress] t=291.000s, gap=N/A, objective=N/A, delta_gap=0.000000%, delta_objective=0.000000
+[progress]已按配置关闭绘图，仅输出 CSV。
+[progress]过程数据与图片输出目录：D:\研一上\研究课题\bld\bld_new\scip\parallel_runs\outputs\i200v5t300_scip_progress
+[progress]过程数据 CSV：D:\研一上\研究课题\bld\bld_new\scip\parallel_runs\outputs\i200v5t300_scip_progress\i200v5t300.csv
+[SCIP] Solver status: timelimit
+[debug] n_sols = 0
+[debug] best_sol_is_none = False
+[debug] best_sol_type = <class 'pyscipopt.scip.Solution'>
+[debug] entering no-solution branch
+[error]在时间限制内未找到任何可行解。不生成输出文件。
+[debug main] returned saved_file = None
+[debug main] returned has_solution = False
+[error]求解在时限/Gap限制内结束，但没有找到任何可行解，状态: timelimit
