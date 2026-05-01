@@ -1,0 +1,99 @@
+正在读取数据(Excel).
+
+========== Params 读取回显（input.xlsx -> Params） ==========
+  B1 | num_of_SKUs     = 200
+  B2 | num_of_Vehicles = 5
+  B3 | num_of_Batches  = 40
+  B4 | B_LB            = 3
+  B5 | B_UB            = 10
+  B6 | b_v             = 5
+  B7 | M_vk            = 10
+  B8 | W_v_min         = 28.5
+  B9 | W_v_max         = 32.5
+ B10 | run_epagap      = 0.005
+ B11 | run_epgap       = 0.005
+ B12 | run_tilim       = 300.0
+===========================================================
+
+数据读取成功!
+Prices 原始批次数: 40；启用批次数(进入模型): 20；Active=0 已被过滤: 20
+=== 数据验证 ===
+beta_min 样本: [0.35, 0.35, 0.35, 0.35, 0.35]
+beta_max 样本: [0.4, 0.4, 0.4, 0.4, 0.4]
+alpha_min 样本: [0.0, 0.005, 0.01, 0.015, 0.025]
+alpha_max 样本: [0.005, 0.01, 0.015, 0.025, 0.07]
+SKU beta 样本: [0.5247999999999999, 0.42469999999999997, 0.30635, 0.29864999999999997, 0.29864999999999997]
+SKU alpha 样本: [0.013295, 0.068285, 0.1168, 0.1219, 0.1219]
+[success]订单参数预检查通过。
+进入优化模型求解.
+构建单体 MIP 模型（不使用 Benders）...
+配置 SCIP 求解参数 ...
+[time-limit]主 MIP 阶段已关闭 gap/absgap 提前停止，仅保留 SCIP 时间上限和证明最优等自然停止条件。
+[time-limit]SCIP 主求解时间上限：300.0 秒 (5.00 分钟)，来源：命令行 --main-time-limit
+开始构造 hard-greedy 初始解 ...
+[warm-start] hard-greedy 构造成功：非空批次=15，补空批次=0
+[warm-start] hard-greedy 初始解注入完成，SCIP accepted=True
+[warm-start]hard-greedy 构造/注入阶段耗时：1.687 秒；该耗时不计入 SCIP 主求解时间上限。
+[warm-start]初始解是否被 SCIP 接受：True
+开始求解 MIP ...
+1/1 feasible solution given by solution candidate storage, new primal bound 3.097124e+05
+
+presolving:
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) symmetry computation finished: 5 generators found (max: 1500, log10 of symmetry group size: 2.38) (symcode time: 0.00)
+dynamic symmetry handling statistics:
+   orbitopal reduction:       no components
+   orbital reduction:          1 components of sizes 5
+   lexicographic reduction:    5 permutations with support sizes 200, 8040, 8040, 8040, 8040
+handled 1 out of 1 symmetry components
+presolving (0 rounds: 0 fast, 0 medium, 0 exhaustive):
+ 0 deleted vars, 0 deleted constraints, 0 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 20100 variables (20100 bin, 0 int, 0 impl, 0 cont) and 716 constraints
+    716 constraints of type <linear>
+Presolving Time: 0.00
+transformed 1/1 original solutions to the transformed problem space
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  1.0s|     1 |     0 |  3278 |     - |   264M |   0 |  20k| 677 | 671 |   0 |  0 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  1.0s|     1 |     0 |  3373 |     - |   278M |   0 |  20k| 677 | 689 |  18 |  1 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  1.0s|     1 |     0 |  3463 |     - |   279M |   0 |  20k| 677 | 707 |  36 |  2 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  2.0s|     1 |     0 |  3559 |     - |   281M |   0 |  20k| 677 | 726 |  55 |  3 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  2.0s|     1 |     0 |  3723 |     - |   288M |   0 |  20k| 677 | 745 |  74 |  4 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  2.0s|     1 |     0 |  3994 |     - |   291M |   0 |  20k| 677 | 764 |  93 |  5 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  3.0s|     1 |     0 |  4386 |     - |   296M |   0 |  20k| 677 | 782 | 111 |  6 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  3.0s|     1 |     0 |  4594 |     - |   297M |   0 |  20k| 677 | 798 | 127 |  7 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  3.0s|     1 |     0 |  4813 |     - |   301M |   0 |  20k| 677 | 818 | 147 |  8 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  3.0s|     1 |     0 |  5047 |     - |   303M |   0 |  20k| 677 | 835 | 164 |  9 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  4.0s|     1 |     0 |  5457 |     - |   305M |   0 |  20k| 677 | 852 | 181 | 10 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+  4.0s|     1 |     0 |  5750 |     - |   308M |   0 |  20k| 677 | 861 | 196 | 11 |   6 |   0 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+ 11.0s|     1 |     2 | 12968 |     - |   312M |   0 |  20k| 705 | 861 | 196 | 11 |  34 |  26 | 3.246034e+05 | 3.097124e+05 |   4.81%| unknown
+ 75.0s|   100 |    95 | 93218 | 883.5 |   374M |  16 |  20k| 723 | 734 | 522 |  1 |  67 | 623 | 3.246028e+05 | 3.097124e+05 |   4.81%| unknown
+  114s|   200 |   191 |168801 | 819.4 |   404M |  23 |  20k| 740 | 755 | 826 |  1 |  92 | 796 | 3.246028e+05 | 3.097124e+05 |   4.81%| unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  165s|   300 |   289 |272662 | 892.7 |   428M |  25 |  20k| 741 | 776 |1107 |  1 |  98 |1037 | 3.246013e+05 | 3.097124e+05 |   4.81%| unknown
+  202s|   400 |   385 |346850 | 854.9 |   433M |  27 |  20k| 745 | 781 |1328 |  3 | 109 |1219 | 3.245980e+05 | 3.097124e+05 |   4.81%| unknown
+  231s|   500 |   483 |403832 | 797.8 |   433M |  29 |  20k| 748 | 771 |1488 |  1 | 119 |1390 | 3.245978e+05 | 3.097124e+05 |   4.81%| unknown
+  259s|   600 |   583 |462145 | 761.9 |   433M |  29 |  20k| 753 | 775 |1603 |  2 | 128 |1527 | 3.245978e+05 | 3.097124e+05 |   4.81%| unknown
+  282s|   700 |   683 |507269 | 717.5 |   436M |  41 |  20k| 753 | 752 |1744 |  1 | 136 |1723 | 3.245978e+05 | 3.097124e+05 |   4.81%| unknown
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 300.00
+Solving Nodes      : 765
+Primal Bound       : +3.09712421324105e+05 (2 solutions)
+Dual Bound         : +3.24597827120534e+05
+Gap                : 4.81 %
+[SCIP] Solver status: timelimit
+
+=== 求解结果摘要 ===
+[result]方法：scip
+[result]运行时间：299.962 s
+[result]求解状态：timelimit
+[result]目标值：309712.421324
+[result]使用批次数量：15
+[result]使用批次钼品位区间：0.35–0.4; 0.4–0.45; 0.45–0.5; 0.5–0.55
+[result]使用批次铜品位区间：0–0.005; 0.005–0.01; 0.01–0.015; 0.025–0.07
+[result]使用车次数量：5
+[result]使用SKU数量：127
+[warn]有 73 个 SKU 未被分配到任何车辆。
+[success]求解完成! 结果已保存到 D:\研一上\研究课题\bld\bld_new\greedy_warmstart_parallel\parallel_runs\outputs\i200v5t300.xlsx
